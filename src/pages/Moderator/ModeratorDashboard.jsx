@@ -24,7 +24,7 @@ import {
 import { AddCircle, CalendarMonth, Download } from '@mui/icons-material';
 import DataGridComponent from '../../components/DataGrid/DataGridComponent';
 import useModeratorReports from '../../hooks/useModeratorReports';
-import useCompaniesList from '../../hooks/useCompaniesList.JSX';
+import useCompaniesList from '../../hooks/useCompaniesList';
 import { useNavigate } from 'react-router-dom';
 
 // Tabs panel component

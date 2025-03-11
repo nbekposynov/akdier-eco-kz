@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { Typography, Box, Grid, TextField, MenuItem, Button, Checkbox, ListItemText, OutlinedInput, FormControl, InputLabel, Select, CircularProgress } from '@mui/material';
 import DataGridComponent from '../../components/DataGrid/DataGridComponent';
 import useGenerateReport from '../../hooks/useGenerateReport';
-import useCompaniesList from '../../hooks/useCompaniesList.JSX';
-import useModeratorsList from '../../hooks/useModeratorsList.JSX';
+import useCompaniesList from '../../hooks/useCompaniesList';
+import useModeratorsList from '../../hooks/useModeratorsList';
 import useExportReport from '../../hooks/useExportReport';
 import CompanyListService from '../../api/CompanyListService';
 

@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 import OperationsDataGrid from '../../components/DataGrid/OperationsDataGrid';
 import useGenerateFinalProcessingReport from '../../hooks/useGenerateFinalProcessingReport';
-import useCompaniesList from '../../hooks/useCompaniesList.JSX';
+import useCompaniesList from '../../hooks/useCompaniesList';
 import useModeratorsList from '../../hooks/useModeratorsList';
 import useExportFinalProcessingReport from '../../hooks/useExportFinalProcessingReport';
 import CompanyListService from '../../api/CompanyListService'; // Add this import

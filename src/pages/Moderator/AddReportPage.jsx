@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Box, Grid, TextField, MenuItem, Button, Typography, CircularProgress, Alert } from '@mui/material';
 import WasteItem from '../../components/WasteItem/WasteItem';
-import useCompaniesList from '../../hooks/useCompaniesList.JSX';
+import useCompaniesList from '../../hooks/useCompaniesList';
 import useWastesType from '../../hooks/useWastesType';
 import WasteRecordService from '../../api/WasteRecordService';
 import { useNavigate } from 'react-router-dom';

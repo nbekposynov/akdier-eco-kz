@@ -23,8 +23,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SearchIcon from "@mui/icons-material/Search";
 import WasteRecordService from "../../api/WasteRecordService";
-import useModeratorsList from "../../hooks/useModeratorsList.JSX";
-import useCompaniesList from "../../hooks/useCompaniesList.JSX";
+import useModeratorsList from "../../hooks/useModeratorsList";
+import useCompaniesList from "../../hooks/useCompaniesList";
 import useWastes from "../../hooks/useWastes";
 
 const WasteRecordPage = () => {

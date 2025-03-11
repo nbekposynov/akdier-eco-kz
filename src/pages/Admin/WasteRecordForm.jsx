@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Box, Grid, TextField, MenuItem, Button, Typography } from '@mui/material';
 import WasteItem from '../../components/WasteItem/WasteItem';
-import useModeratorsList from '../../hooks/useModeratorsList.JSX';
-import useCompaniesList from '../../hooks/useCompaniesList.JSX';
+import useModeratorsList from '../../hooks/useModeratorsList';
+import useCompaniesList from '../../hooks/useCompaniesList';
 import useWastesType from '../../hooks/useWastesType';
 import WasteRecordService from '../../api/WasteRecordService';
 
