@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import ReportService from '../api/ReportService';
-import ReportServiceExcel from '../api/reportServiceExcel';
+import ReportServiceExcel from '../api/ReportServiceExcel';
 
 const useModeratorReports = (filters = null) => {
     const [reports, setReports] = useState(null);
