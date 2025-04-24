@@ -304,7 +304,7 @@ export default function FinalProcessingReportPage() {
                 </Box>
             ) : (
                 searchTriggered && report && (
-                    <OperationsDataGrid data={report} />
+                    <OperationsDataGrid data={report} unitType="т" />
                 )
             )}
         </Box>

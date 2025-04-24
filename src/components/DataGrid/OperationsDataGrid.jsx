@@ -14,7 +14,8 @@ import {
     Chip
 } from '@mui/material';
 
-const OperationsDataGrid = ({ data }) => {
+// Добавляем props unitType, по умолчанию "м³"
+const OperationsDataGrid = ({ data, unitType = "м³" }) => {
     if (!data || !data.operations || !data.wastes || !data.companies || data.companies.length === 0) {
         return (
             <Box sx={{ p: 2, textAlign: 'center' }}>
@@ -37,10 +38,10 @@ const OperationsDataGrid = ({ data }) => {
         return colorPalette[operationIndex % colorPalette.length];
     };
 
-    // Format numbers with units (cubic meters - м³)
+    // Format numbers with units based on unitType prop
     const formatValue = (value) => {
         const numValue = Number(value);
-        return numValue === 0 ? '0' : `${numValue.toFixed(2)} м³`;
+        return numValue === 0 ? '0' : `${numValue.toFixed(2)} ${unitType}`;
     };
 
     // Restructure the data for the specified layout
@@ -132,7 +133,7 @@ const OperationsDataGrid = ({ data }) => {
                                     textAlign: 'center'
                                 }}
                             >
-                                Количество (м³)
+                                Количество ({unitType})
                             </TableCell>
 
                             <TableCell

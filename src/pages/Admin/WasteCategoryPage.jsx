@@ -50,15 +50,20 @@ const WasteCategoryPage = () => {
         });
     };
 
-    const handleSubmit = () => {
-        if (editingId) {
-            updateCategory(editingId, form);
+    const handleSubmit = async () => {
+        try {
+            if (editingId) {
+                await updateCategory(editingId, form);
+            } else {
+                await createCategory(form);
+            }
+            setForm({ name: '', slug: '' });
             setEditingId(null);
-        } else {
-            createCategory(form);
+            setOpenFormDialog(false);
+        } catch (error) {
+            console.error("Ошибка при сохранении категории:", error);
+            // Можно здесь добавить отображение ошибки пользователю
         }
-        setForm({ name: '', slug: '' });
-        setOpenFormDialog(false);
     };
 
     const handleEdit = (category) => {
@@ -67,10 +72,15 @@ const WasteCategoryPage = () => {
         setOpenFormDialog(true);
     };
 
-    const handleDelete = () => {
-        deleteCategory(deleteId);
-        setDeleteId(null);
-        setOpenDeleteDialog(false);
+    const handleDelete = async () => {
+        try {
+            await deleteCategory(deleteId);
+            setDeleteId(null);
+            setOpenDeleteDialog(false);
+        } catch (error) {
+            console.error("Ошибка при удалении категории:", error);
+            // Можно здесь добавить отображение ошибки пользователю
+        }
     };
 
     const openCreateDialog = () => {
