@@ -57,6 +57,64 @@ export default function useWastes() {
         }
     }, []);
 
+    // Add new function to create waste
+    const createWaste = useCallback(async (wasteData) => {
+        setLoading(true);
+        try {
+            const newWaste = await WasteService.create(wasteData);
+            setWastes(prev => [...prev, newWaste]);
+            // Clear the cache to ensure fresh data on next fetch
+            wasteCache.wastes = null;
+            setError(null);
+            return newWaste;
+        } catch (err) {
+            console.error("Error creating waste:", err);
+            setError(err.message || 'Error creating waste');
+            throw err;
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+    // Add new function to update waste
+    const updateWaste = useCallback(async (id, wasteData) => {
+        setLoading(true);
+        try {
+            const updatedWaste = await WasteService.update(id, wasteData);
+            setWastes(prev => prev.map(waste =>
+                waste.id === id ? updatedWaste : waste
+            ));
+            // Clear the cache to ensure fresh data on next fetch
+            wasteCache.wastes = null;
+            setError(null);
+            return updatedWaste;
+        } catch (err) {
+            console.error("Error updating waste:", err);
+            setError(err.message || 'Error updating waste');
+            throw err;
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+    // Add new function to delete waste
+    const deleteWaste = useCallback(async (id) => {
+        setLoading(true);
+        try {
+            await WasteService.delete(id);
+            setWastes(prev => prev.filter(waste => waste.id !== id));
+            // Clear the cache to ensure fresh data on next fetch
+            wasteCache.wastes = null;
+            setError(null);
+        } catch (err) {
+            console.error("Error deleting waste:", err);
+            setError(err.message || 'Error deleting waste');
+            throw err;
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
     // Load data when the component mounts
     useEffect(() => {
         fetchWastes();
@@ -69,6 +127,9 @@ export default function useWastes() {
         loading,
         error,
         refreshWastes: fetchWastes,
-        refreshFinalWasteTypes: fetchFinalWasteTypes
+        refreshFinalWasteTypes: fetchFinalWasteTypes,
+        createWaste,
+        updateWaste,
+        deleteWaste
     };
 }
