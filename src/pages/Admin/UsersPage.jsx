@@ -36,7 +36,7 @@ import {
     VisibilityOff as VisibilityOffIcon
 } from '@mui/icons-material';
 import { useUsers } from '../../hooks/useUsers';
-
+import useModeratorsList from '../../hooks/useModeratorsList';
 export const UsersPage = () => {
     const {
         users,
@@ -49,6 +49,8 @@ export const UsersPage = () => {
         deleteUser,
         createUser
     } = useUsers();
+
+    const { moderators, loading: loadingModerators } = useModeratorsList();
 
     const [search, setSearch] = useState('');
     const [role, setRole] = useState('all');
@@ -72,7 +74,9 @@ export const UsersPage = () => {
         password: '',
         role: 'company',
         bin_company: '',
-        description: ''
+        description: '',
+        moderator_id: '' // Добавьте moderator_id в начальное состояние
+
     });
 
     const isAdmin = localStorage.getItem('user_role') === 'admin';
@@ -117,7 +121,8 @@ export const UsersPage = () => {
             email: user.email,
             role: user.role,
             bin_company: user.bin_company || '',
-            description: user.description || ''
+            description: user.description || '',
+            moderator_id: user.moderator_id || ''
         });
     };
 
@@ -328,6 +333,31 @@ export const UsersPage = () => {
                                 <MenuItem value="user">Пользователь</MenuItem>
                             </Select>
                         </FormControl>
+                        {editFormData.role === 'company' && (
+                            <FormControl fullWidth>
+                                <InputLabel>Модератор</InputLabel>
+                                <Select
+                                    value={editFormData.moderator_id || ''}
+                                    label="Модератор"
+                                    onChange={(e) => setEditFormData(prev => ({
+                                        ...prev,
+                                        moderator_id: e.target.value
+                                    }))}
+                                >
+                                    <MenuItem value="">Не выбрано</MenuItem>
+                                    {loadingModerators ? (
+                                        <MenuItem disabled>Загрузка...</MenuItem>
+                                    ) : (
+                                        moderators.map(moderator => (
+                                            <MenuItem key={moderator.id} value={moderator.id}>
+                                                {moderator.name} ({moderator.email})
+                                            </MenuItem>
+                                        ))
+                                    )}
+                                </Select>
+                            </FormControl>
+                        )}
+
                         <TextField
                             label="БИН"
                             value={editFormData.bin_company}
@@ -428,6 +458,30 @@ export const UsersPage = () => {
                                 <MenuItem value="company">Компания</MenuItem>
                             </Select>
                         </FormControl>
+                        {newUserData.role === 'company' && (
+                            <FormControl fullWidth>
+                                <InputLabel>Модератор</InputLabel>
+                                <Select
+                                    value={newUserData.moderator_id}
+                                    label="Модератор"
+                                    onChange={(e) => setNewUserData(prev => ({
+                                        ...prev,
+                                        moderator_id: e.target.value
+                                    }))}
+                                >
+                                    <MenuItem value="">Не выбрано</MenuItem>
+                                    {loadingModerators ? (
+                                        <MenuItem disabled>Загрузка...</MenuItem>
+                                    ) : (
+                                        moderators.map(moderator => (
+                                            <MenuItem key={moderator.id} value={moderator.id}>
+                                                {moderator.name} ({moderator.email})
+                                            </MenuItem>
+                                        ))
+                                    )}
+                                </Select>
+                            </FormControl>
+                        )}
                         <TextField
                             fullWidth
                             label="БИН компании"
