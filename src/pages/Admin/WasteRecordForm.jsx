@@ -33,7 +33,9 @@ const WasteRecordForm = () => {
         }
         setForm((prev) => ({
             ...prev,
-            items: [...prev.items, { waste_id: '', amount: '' }],
+            items: [...prev.items, {
+                waste_id: '', amount: '', factor: null
+            }],
         }));
     };
 
@@ -53,8 +55,27 @@ const WasteRecordForm = () => {
     const handleSubmit = async () => {
         try {
             setLoadingSubmit(true);
-            await WasteRecordService.createWasteRecord(form);
+
+            // Подготавливаем данные для отправки
+            const submitData = { ...form };
+
+            // Обрабатываем factor для каждого item
+            submitData.items = form.items.map(item => {
+                const processedItem = { ...item };
+
+                // Если factor равен null, undefined или 0, удаляем его из объекта
+                if (processedItem.factor === null || processedItem.factor === undefined || processedItem.factor === 0) {
+                    delete processedItem.factor;
+                }
+
+                return processedItem;
+            });
+
+            console.log('Отправляемые данные:', submitData);
+
+            await WasteRecordService.createWasteRecord(submitData);
             alert('Запись успешно создана!');
+
             setForm({
                 company_id: '',
                 moderator_id: '',
@@ -65,7 +86,7 @@ const WasteRecordForm = () => {
             });
         } catch (error) {
             console.error('Ошибка при создании записи:', error);
-            alert('Не удалось создать запись.');
+            alert(`Не удалось создать запись: ${error.response?.data?.message || error.message}`);
         } finally {
             setLoadingSubmit(false);
         }

@@ -19,6 +19,8 @@ import {
     MenuItem,
     TablePagination,
     Alert,
+    Grid, // Добавьте Grid если его нет
+
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -378,8 +380,186 @@ const WasteRecordPage = () => {
                 labelRowsPerPage="Записей на странице:"
             />
 
-            {/* Диалоги и формы без изменений */}
-            {/* ... */}
+            {/* Диалог подтверждения удаления */}
+            <Dialog
+                open={openDeleteDialog}
+                onClose={handleCloseDeleteDialog}
+                aria-labelledby="delete-dialog-title"
+                aria-describedby="delete-dialog-description"
+            >
+                <DialogTitle id="delete-dialog-title">
+                    Подтверждение удаления
+                </DialogTitle>
+                <DialogContent>
+                    <Typography>
+                        Вы уверены, что хотите удалить эту запись об отходах?
+                        Это действие нельзя отменить.
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        onClick={handleCloseDeleteDialog}
+                        color="secondary"
+                    >
+                        Отмена
+                    </Button>
+                    <Button
+                        onClick={handleDelete}
+                        color="error"
+                        variant="contained"
+                        disabled={loading}
+                    >
+                        {loading ? <CircularProgress size={20} /> : 'Удалить'}
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            {/* Диалог формы (если нужен) */}
+            <Dialog
+                open={openFormDialog}
+                onClose={handleCloseFormDialog}
+                maxWidth="md"
+                fullWidth
+            >
+                <DialogTitle>
+                    {editingId ? 'Редактировать запись' : 'Добавить запись'}
+                </DialogTitle>
+                <DialogContent>
+                    {/* Форма редактирования */}
+                    <Grid container spacing={2} sx={{ mt: 1 }}>
+                        <Grid item xs={12} md={6}>
+                            <TextField
+                                label="Компания"
+                                fullWidth
+                                select
+                                value={form.company_id}
+                                onChange={(e) => setForm(prev => ({ ...prev, company_id: e.target.value }))}
+                                disabled={loadingCompanies}
+                            >
+                                {companies.map((company) => (
+                                    <MenuItem key={company.id} value={company.id}>
+                                        {company.name}
+                                    </MenuItem>
+                                ))}
+                            </TextField>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <TextField
+                                label="Модератор"
+                                fullWidth
+                                select
+                                value={form.moderator_id}
+                                onChange={(e) => setForm(prev => ({ ...prev, moderator_id: e.target.value }))}
+                                disabled={loadingModerators}
+                            >
+                                {moderators.map((moderator) => (
+                                    <MenuItem key={moderator.id} value={moderator.id}>
+                                        {moderator.name}
+                                    </MenuItem>
+                                ))}
+                            </TextField>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <TextField
+                                label="Номер машины"
+                                fullWidth
+                                value={form.car_num}
+                                onChange={(e) => setForm(prev => ({ ...prev, car_num: e.target.value }))}
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <TextField
+                                label="Имя водителя"
+                                fullWidth
+                                value={form.driv_name}
+                                onChange={(e) => setForm(prev => ({ ...prev, driv_name: e.target.value }))}
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <TextField
+                                label="Дата записи"
+                                type="date"
+                                fullWidth
+                                InputLabelProps={{ shrink: true }}
+                                value={form.record_date}
+                                onChange={(e) => setForm(prev => ({ ...prev, record_date: e.target.value }))}
+                            />
+                        </Grid>
+
+                        {/* Отходы */}
+                        <Grid item xs={12}>
+                            <Typography variant="h6" sx={{ mb: 2 }}>Отходы</Typography>
+                            {form.items.map((item, index) => (
+                                <Grid container spacing={2} key={index} sx={{ mb: 2 }}>
+                                    <Grid item xs={12} md={4}>
+                                        <TextField
+                                            label="Тип отхода"
+                                            fullWidth
+                                            select
+                                            value={item.waste_id}
+                                            onChange={(e) => handleItemChange(index, 'waste_id', e.target.value)}
+                                        >
+                                            {wastes.map((waste) => (
+                                                <MenuItem key={waste.id} value={waste.id}>
+                                                    {waste.name}
+                                                </MenuItem>
+                                            ))}
+                                        </TextField>
+                                    </Grid>
+                                    <Grid item xs={12} md={3}>
+                                        <TextField
+                                            label="Количество"
+                                            type="number"
+                                            fullWidth
+                                            value={item.amount}
+                                            onChange={(e) => handleItemChange(index, 'amount', e.target.value)}
+                                            inputProps={{ min: 0, step: 0.01 }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={3}>
+                                        <TextField
+                                            label="Коэффициент (опционально)"
+                                            type="number"
+                                            fullWidth
+                                            value={item.factor || ''}
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                handleItemChange(index, 'factor', value === '' ? null : parseFloat(value));
+                                            }}
+                                            inputProps={{ min: 0, step: 0.01 }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={2}>
+                                        <Button
+                                            variant="outlined"
+                                            color="error"
+                                            onClick={() => removeItem(index)}
+                                            fullWidth
+                                        >
+                                            Удалить
+                                        </Button>
+                                    </Grid>
+                                </Grid>
+                            ))}
+                            <Button
+                                onClick={addItem}
+                                variant="outlined"
+                                sx={{ mt: 1 }}
+                            >
+                                Добавить отход
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseFormDialog}>
+                        Отмена
+                    </Button>
+                    <Button onClick={handleFormSubmit} variant="contained">
+                        {editingId ? 'Обновить' : 'Создать'}
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     );
 };

@@ -29,6 +29,21 @@ const WasteItem = ({ index, item, wastes, onChange, onRemove }) => {
                         onChange={(e) => onChange(index, 'amount', e.target.value)}
                     />
                 </Grid>
+                <Grid item xs={12} md={3}>
+                    <TextField
+                        label="Коэффициент (опционально)"
+                        type="number"
+                        fullWidth
+                        value={item.factor || ''}
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            onChange(index, 'factor', value === '' ? null : parseFloat(value));
+                        }}
+                        placeholder="Стандартный"
+                        helperText="Переопределяет коэффициент типа отхода"
+                        inputProps={{ min: 0, step: 0.01 }}
+                    />
+                </Grid>
                 <Grid item xs={2}>
                     <IconButton onClick={() => onRemove(index)} color="error">
                         <DeleteIcon />
