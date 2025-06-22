@@ -34,14 +34,23 @@ const WasteItem = ({ index, item, wastes, onChange, onRemove }) => {
                         label="Коэффициент (опционально)"
                         type="number"
                         fullWidth
-                        value={item.factor || ''}
+                        value={item.factor === null || item.factor === undefined ? '' : item.factor}
                         onChange={(e) => {
                             const value = e.target.value;
-                            onChange(index, 'factor', value === '' ? null : parseFloat(value));
+                            // Если пустое значение, устанавливаем null
+                            if (value === '') {
+                                onChange(index, 'factor', null);
+                            } else {
+                                // Разрешаем любой ввод, валидация при отправке
+                                onChange(index, 'factor', value);
+                            }
                         }}
                         placeholder="Стандартный"
                         helperText="Переопределяет коэффициент типа отхода"
-                        inputProps={{ min: 0, step: 0.01 }}
+                        inputProps={{
+                            min: 0,
+                            step: 0.01
+                        }}
                     />
                 </Grid>
                 <Grid item xs={2}>
